@@ -3,621 +3,215 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>I Will Troll You Every Time - Ojas Pratap Singh</title>
+    <title>I Will Troll You Every Time</title>
     <style>
         * {
             box-sizing: border-box;
             user-select: none;
             -webkit-user-select: none;
-            touch-action: none;
         }
-        body {
+        body, html {
             margin: 0;
             padding: 0;
-            background: #090d16;
-            color: #fff;
-            font-family: sans-serif;
-            width: 100vw;
-            height: 100vh;
+            width: 100%;
+            height: 100%;
+            background-color: #0b0f19;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
-        #rotate-warning {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: #0f172a;
-            color: #38bdf8;
-            z-index: 9999;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 20px;
-            font-size: 18px;
-            font-weight: bold;
-        }
-        @media screen and (orientation: portrait) {
-            #rotate-warning { display: flex; }
-        }
-
-        /* Animated Intro Screen */
         #intro-screen {
-            position: fixed;
-            inset: 0;
-            background: #090d16;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0f172a, #1e1b4b);
             display: flex;
             flex-direction: column;
-            align-items: center;
             justify-content: center;
-            z-index: 5000;
-            animation: fadeOut 0.5s ease 3s forwards;
-        }
-        @keyframes fadeOut {
-            to { opacity: 0; visibility: hidden; }
+            align-items: center;
+            z-index: 100;
+            transition: opacity 1s ease;
         }
         .intro-title {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: bold;
             color: #38bdf8;
-            text-shadow: 0 0 15px rgba(56, 189, 248, 0.6);
-            animation: pulse 1s infinite alternate;
             text-align: center;
-            padding: 0 20px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
+            animation: pulse 1.5s infinite;
         }
-        .intro-sub {
-            font-size: 13px;
-            color: #94a3b8;
-            margin-top: 10px;
+        .intro-credit {
+            font-size: 18px;
+            color: #f43f5e;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        .intro-insta {
+            font-size: 15px;
+            color: #a78bfa;
+            text-decoration: none;
+            border: 1px dashed #a78bfa;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: rgba(167, 139, 250, 0.1);
         }
         @keyframes pulse {
-            from { transform: scale(1); }
-            to { transform: scale(1.06); }
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
-
-        /* Google Sign-In Page */
-        #login-screen {
-            position: fixed;
-            inset: 0;
-            background: #0f172a;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 4000;
-            padding: 20px;
-            text-align: center;
-        }
-        .login-box {
-            background: #1e293b;
-            border: 2px solid #38bdf8;
-            padding: 30px;
-            border-radius: 16px;
-            width: 340px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.8);
-        }
-        .login-box h2 { color: #38bdf8; margin-top: 0; font-size: 20px; }
-        .login-box p { color: #94a3b8; font-size: 12px; margin-bottom: 20px; }
-        .google-btn {
-            background: #fff;
-            color: #0f172a;
-            border: none;
-            width: 100%;
-            padding: 12px;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
-        .google-btn:active { background: #f1f5f9; transform: scale(0.98); }
-
-        #game-wrapper {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-            background: #0f172a;
-            display: flex;
-            flex-direction: column;
-            display: none; /* Hidden until login */
-        }
-
-        .top-bar {
-            width: 100%;
-            height: 34px;
-            background: #1e293b;
-            border-bottom: 2px solid #38bdf8;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 14px;
-            font-size: 13px;
-            font-weight: bold;
-            color: #38bdf8;
-            z-index: 10;
-        }
-        #ad-tag {
-            background: #334155;
-            color: #fde047;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-        }
-
-        canvas {
-            flex: 1;
-            width: 100%;
-            height: calc(100vh - 34px);
-            display: block;
-            background: #090d16;
-        }
-
-        /* Left Joystick */
-        #joystick-zone {
-            position: absolute;
-            bottom: 22px;
-            left: 28px;
-            width: 110px;
-            height: 110px;
-            background: rgba(56, 189, 248, 0.12);
-            border: 2px solid rgba(56, 189, 248, 0.5);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 20;
-        }
-        #joystick-knob {
-            width: 46px;
-            height: 46px;
-            background: rgba(56, 189, 248, 0.85);
-            border-radius: 50%;
-            box-shadow: 0 0 12px rgba(56, 189, 248, 0.8);
-            position: relative;
-            transform: translate(0px, 0px);
-        }
-
-        /* Right Jump Button */
-        #jump-btn {
-            position: absolute;
-            bottom: 26px;
-            right: 32px;
-            width: 95px;
-            height: 95px;
-            border-radius: 50%;
-            background: rgba(2, 132, 199, 0.85);
-            border: 3px solid #38bdf8;
-            color: #fff;
-            font-size: 16px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
-            z-index: 20;
-        }
-        #jump-btn:active {
-            background: #0369a1;
-            transform: scale(0.93);
-        }
-
-        /* Penalty Modal */
-        #penalty-modal {
-            position: absolute;
-            inset: 0;
-            background: rgba(9, 13, 22, 0.96);
+        #game-container {
             display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 20px;
-            z-index: 2000;
+            width: 100%;
+            height: 100%;
+            position: relative;
         }
-        #penalty-modal h2 { color: #ef4444; margin: 0 0 8px 0; font-size: 20px; }
-        #penalty-modal p { color: #cbd5e1; font-size: 13px; margin: 0 0 14px 0; max-width: 420px; }
-        .modal-actions { display: flex; gap: 12px; }
-        .modal-btn {
-            background: #22c55e;
-            color: #fff;
-            border: none;
-            padding: 10px 18px;
+        canvas {
+            display: block;
+            background: #111827;
+        }
+        #ui-layer {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 18px;
             font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 13px;
+            pointer-events: none;
         }
-        .modal-btn.wait { background: #f59e0b; }
+        #ad-banner-sim {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background: #1f2937;
+            border-top: 2px solid #374151;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 13px;
+            color: #9ca3af;
+        }
     </style>
 </head>
 <body>
 
-    <!-- 3 Second Animated Intro -->
+    <!-- 5 Second Splash Screen / Intro -->
     <div id="intro-screen">
-        <div class="intro-title">🔥 I Will Troll You Every Time 🔥</div>
-        <div class="intro-sub">Created by Ojas Pratap Singh</div>
+        <div class="intro-title">I Will Troll You Every Time</div>
+        <div class="intro-credit">Created by Ojas Pratap Singh</div>
+        <a href="https://www.instagram.com/" class="intro-insta" target="_blank">Instagram: @DesignByKratos</a>
     </div>
 
-    <!-- Google Login / Sign-Up Screen -->
-    <div id="login-screen">
-        <div class="login-box">
-            <h2>🎮 Welcome Gamer!</h2>
-            <p>Apna game progress save rakhne ke liye Google se sign-in karo bhai.</p>
-            <button class="google-btn" onclick="loginWithGoogle()">
-                <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.19v3.15C3.17 21.3 7.24 24 12 24z"/><path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.19C.43 8.1 0 9.8 0 12s.43 3.9 1.19 5.42l4.09-3.15z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.24 0 3.17 2.7 1.19 6.58l4.09 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/></svg>
-                Sign in with Google
-            </button>
+    <!-- Main Game UI -->
+    <div id="game-container">
+        <div id="ui-layer">
+            <div>Score: <span id="score">0</span></div>
+            <div>Deaths: <span id="deaths">0</span>/10</div>
         </div>
-    </div>
-
-    <div id="rotate-warning">
-        📱🔄<br><br>
-        Bhai phone ko landscape (aada) ghumale!<br>
-        <span style="font-size: 13px; color: #94a3b8; margin-top: 8px;">Auto-rotate on karke tircha pakdo</span>
-    </div>
-
-    <div id="game-wrapper">
-        <div class="top-bar">
-            <span id="level-text">🎮 Level: 1</span>
-            <span id="ad-tag">📢 Ojas Ads Network</span>
-            <span id="death-text">💀 Deaths: 0/10</span>
-            <span id="user-display">👑 Ojas</span>
-        </div>
-
         <canvas id="gameCanvas"></canvas>
-
-        <div id="joystick-zone">
-            <div id="joystick-knob"></div>
-        </div>
-
-        <button id="jump-btn">⬆ JUMP</button>
-
-        <div id="penalty-modal">
-            <h2>💀 10 Deaths ho gayi bhai!</h2>
-            <p>Aage khelne ke liye ya toh 2 sponsored ads dekho ya 10 minute wait karo.</p>
-            <div class="modal-actions">
-                <button class="modal-btn" onclick="watchAdsToRevive()">▶ Watch 2 Ads & Play</button>
-                <button class="modal-btn wait" onclick="startTimerWait()">⏳ Wait 10 Mins</button>
-            </div>
-            <p id="wait-timer" style="margin-top: 12px; color: #38bdf8; font-weight: bold;"></p>
-        </div>
+        <div id="ad-banner-sim">Unity Ads Banner [ID: 800439402] Active</div>
     </div>
 
     <script>
-        // Auto Load saved progress if logged in before
-        window.addEventListener('DOMContentLoaded', () => {
-            let savedUser = localStorage.getItem('ojas_game_user');
-            let savedLevel = localStorage.getItem('ojas_game_level');
-            if(savedUser) {
-                document.getElementById('login-screen').style.display = 'none';
-                document.getElementById('game-wrapper').style.display = 'flex';
-                document.getElementById('user-display').innerText = "👑 " + savedUser;
-                if(savedLevel) currentLevel = parseInt(savedLevel);
-                loadLevel(currentLevel);
-            }
-        });
+        // Unity Ads Integration Stub for Wrapper / Android APK
+        const UNITY_GAME_ID = "800439402";
+        console.log("Unity Ads Initialized with Game ID: " + UNITY_GAME_ID);
 
-        function loginWithGoogle() {
-            // Simulated Google Auth & Auto Save state
-            let userName = "Ojas Pratap";
-            localStorage.setItem('ojas_game_user', userName);
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('game-wrapper').style.display = 'flex';
-            document.getElementById('user-display').innerText = "👑 " + userName;
-            loadLevel(currentLevel);
+        function triggerRewardedAd() {
+            alert("Unity Ads Rewarded Video Loaded! (Watch ad to get revival bonus)");
         }
 
-        const canvas = document.getElementById("gameCanvas");
-        const ctx = canvas.getContext("2d");
-
-        const GAME_W = 800;
-        const GAME_H = 360;
-        canvas.width = GAME_W;
-        canvas.height = GAME_H;
-
-        let deaths = 0;
-        let currentLevel = 1;
-        let isPenalized = false;
-
-        let player = {
-            x: 50, y: 260, w: 24, h: 24,
-            dx: 0, dy: 0, maxSpeed: 4.2,
-            jumpPower: -9.5, grounded: false
-        };
-        let gravity = 0.45;
-
-        let platforms = [];
-        let spikes = [];
-        let flag = { x: 720, y: 250, w: 22, h: 50 };
-
-        function loadLevel(lvl) {
-            player.x = 50;
-            player.y = 260;
-            player.dx = 0;
-            player.dy = 0;
-
-            platforms = [];
-            spikes = [];
-
-            platforms.push({ x: 0, y: 310, w: 200, h: 50 });
-
-            let numSteps = 3 + Math.floor(lvl * 0.5);
-            if (numSteps > 6) numSteps = 6;
-
-            let lastX = 200;
-            let lastY = 310;
-
-            for (let i = 0; i < numSteps; i++) {
-                let pWidth = Math.max(90, 140 - (lvl * 3));
-                let pHeight = 20;
-                let nextX = lastX + 70 + Math.floor(Math.random() * 40);
-                let nextY = Math.max(130, lastY - 45 + Math.floor(Math.random() * 70));
-                
-                platforms.push({ x: nextX, y: nextY, w: pWidth, h: pHeight });
-
-                if (lvl >= 2 && i % 2 === 1 && nextX < 650) {
-                    spikes.push({ x: nextX + 20, y: nextY - 15, w: 25, h: 15 });
-                }
-
-                lastX = nextX;
-                lastY = nextY;
-            }
-
-            let finalPlatformX = Math.min(700, lastX + 110);
-            platforms.push({ x: finalPlatformX, y: 260, w: 150, h: 100 });
-            flag = { x: finalPlatformX + 60, y: 210, w: 22, h: 50 };
-
-            document.getElementById("level-text").innerText = "🎮 Level: " + currentLevel;
-            
-            // Save progress automatically so user gets left-off state
-            localStorage.setItem('ojas_game_level', currentLevel);
-        }
-
-        // Joystick Logic
-        const joyZone = document.getElementById("joystick-zone");
-        const joyKnob = document.getElementById("joystick-knob");
-        let joyTouchId = null;
-        const maxRadius = 38;
-
-        function handleJoystickMove(clientX, clientY) {
-            const rect = joyZone.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
-
-            let deltaX = clientX - centerX;
-            let deltaY = clientY - centerY;
-            const dist = Math.hypot(deltaX, deltaY);
-
-            if (dist > maxRadius) {
-                deltaX = (deltaX / dist) * maxRadius;
-                deltaY = (deltaY / dist) * maxRadius;
-            }
-
-            joyKnob.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
-
-            if (!isPenalized) {
-                if (Math.abs(deltaX) < 6) {
-                    player.dx = 0;
-                } else {
-                    player.dx = (deltaX / maxRadius) * player.maxSpeed;
-                }
-            }
-        }
-
-        function resetJoystick() {
-            joyTouchId = null;
-            joyKnob.style.transform = `translate(0px, 0px)`;
-            player.dx = 0;
-        }
-
-        joyZone.addEventListener("touchstart", (e) => {
-            e.preventDefault();
-            if (joyTouchId === null) {
-                const touch = e.changedTouches[0];
-                joyTouchId = touch.identifier;
-                handleJoystickMove(touch.clientX, touch.clientY);
-            }
-        }, { passive: false });
-
-        joyZone.addEventListener("touchmove", (e) => {
-            e.preventDefault();
-            for (let i = 0; i < e.changedTouches.length; i++) {
-                if (e.changedTouches[i].identifier === joyTouchId) {
-                    handleJoystickMove(e.changedTouches[i].clientX, e.changedTouches[i].clientY);
-                }
-            }
-        }, { passive: false });
-
-        joyZone.addEventListener("touchend", (e) => {
-            for (let i = 0; i < e.changedTouches.length; i++) {
-                if (e.changedTouches[i].identifier === joyTouchId) resetJoystick();
-            }
-        });
-        joyZone.addEventListener("touchcancel", resetJoystick);
-
-        let mouseDownJoy = false;
-        joyZone.addEventListener("mousedown", (e) => {
-            mouseDownJoy = true;
-            handleJoystickMove(e.clientX, e.clientY);
-        });
-        window.addEventListener("mousemove", (e) => {
-            if (mouseDownJoy) handleJoystickMove(e.clientX, e.clientY);
-        });
-        window.addEventListener("mouseup", () => {
-            if (mouseDownJoy) {
-                mouseDownJoy = false;
-                resetJoystick();
-            }
-        });
-
-        // Jump Button Logic
-        const jumpBtn = document.getElementById("jump-btn");
-        function triggerJump(e) {
-            if (e) e.preventDefault();
-            if (!isPenalized && player.grounded) {
-                player.dy = player.jumpPower;
-                player.grounded = false;
-            }
-        }
-        jumpBtn.addEventListener("touchstart", triggerJump, { passive: false });
-        jumpBtn.addEventListener("mousedown", triggerJump);
-
-        window.addEventListener("keydown", (e) => {
-            if (isPenalized) return;
-            if (e.key === "ArrowLeft" || e.key === "a") player.dx = -player.maxSpeed;
-            if (e.key === "ArrowRight" || e.key === "d") player.dx = player.maxSpeed;
-            if (e.key === " " || e.key === "ArrowUp" || e.key === "w") triggerJump();
-        });
-        window.addEventListener("keyup", (e) => {
-            if (["ArrowLeft", "ArrowRight", "a", "d"].includes(e.key)) player.dx = 0;
-        });
-
-        function resetPlayer() {
-            if (isPenalized) return;
-            deaths++;
-            document.getElementById("death-text").innerText = "💀 Deaths: " + deaths + "/10";
-
-            if (deaths >= 10) {
-                isPenalized = true;
-                resetJoystick();
-                document.getElementById("penalty-modal").style.display = "flex";
-                return;
-            }
-
-            player.x = 50;
-            player.y = 260;
-            player.dy = 0;
-        }
-
-        function watchAdsToRevive() {
-            alert("📺 2 Sponsored Ads Complete! Ojas ko revenue mil gaya, game resume ho gaya!");
-            deaths = 0;
-            document.getElementById("death-text").innerText = "💀 Deaths: 0/10";
-            document.getElementById("penalty-modal").style.display = "none";
-            isPenalized = false;
-            loadLevel(currentLevel);
-        }
-
-        let waitInterval;
-        function startTimerWait() {
-            let timeLeft = 600;
-            let timerDisplay = document.getElementById("wait-timer");
-            document.querySelectorAll('.modal-btn').forEach(b => b.style.display = 'none');
-
-            waitInterval = setInterval(() => {
-                let m = Math.floor(timeLeft / 60);
-                let s = timeLeft % 60;
-                timerDisplay.innerText = `⏳ Prateeksha karein: ${m} min ${s} sec`;
-                timeLeft--;
-                if (timeLeft < 0) {
-                    clearInterval(waitInterval);
-                    document.getElementById("penalty-modal").style.display = "none";
-                    deaths = 0;
-                    document.getElementById("death-text").innerText = "💀 Deaths: 0/10";
-                    document.querySelectorAll('.modal-btn').forEach(b => b.style.display = 'inline-block');
-                    timerDisplay.innerText = "";
-                    isPenalized = false;
-                    loadLevel(currentLevel);
-                }
+        // Hide Intro after 5 seconds and start game
+        setTimeout(() => {
+            document.getElementById('intro-screen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('intro-screen').style.display = 'none';
+                document.getElementById('game-container').style.display = 'block';
+                initGame();
             }, 1000);
-        }
+        }, 5000);
 
-        function update() {
-            if (isPenalized) return;
+        // Basic Canvas Game Loop Placeholder
+        function initGame() {
+            const canvas = document.getElementById('gameCanvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight - 50; // Leave space for banner
 
-            player.x += player.dx;
-            player.dy += gravity;
-            player.y += player.dy;
-            player.grounded = false;
+            let player = { x: 50, y: canvas.height - 150, w: 30, h: 30, color: '#38bdf8', vy: 0, gravity: 0.6, jump: -12, grounded: false };
+            let obstacles = [{ x: canvas.width, y: canvas.height - 150, w: 25, h: 40, speed: 5 }];
+            let score = 0;
+            let deaths = 0;
 
-            platforms.forEach(p => {
-                if (
-                    player.x < p.x + p.w &&
-                    player.x + player.w > p.x &&
-                    player.y + player.h >= p.y &&
-                    player.y + player.h <= p.y + p.h + 12 &&
-                    player.dy >= 0
-                ) {
-                    player.y = p.y - player.h;
-                    player.dy = 0;
+            window.addEventListener('touchstart', () => {
+                if (player.grounded) {
+                    player.vy = player.jump;
+                    player.grounded = false;
+                }
+            });
+
+            function update() {
+                player.vy += player.gravity;
+                player.y += player.vy;
+
+                if (player.y > canvas.height - 150) {
+                    player.y = canvas.height - 150;
+                    player.vy = 0;
                     player.grounded = true;
                 }
-            });
 
-            spikes.forEach(s => {
-                if (
-                    player.x < s.x + s.w &&
-                    player.x + player.w > s.x &&
-                    player.y < s.y + s.h &&
-                    player.y + player.h > s.y
-                ) {
-                    resetPlayer();
+                obstacles[0].x -= obstacles[0].speed;
+                if (obstacles[0].x < -30) {
+                    obstacles[0].x = canvas.width + Math.random() * 200;
+                    score += 10;
+                    document.getElementById('score').innerText = score;
                 }
-            });
 
-            if (player.x < 0) player.x = 0;
-            if (player.x > GAME_W - player.w) player.x = GAME_W - player.w;
-            if (player.y > GAME_H) resetPlayer();
-
-            if (
-                player.x < flag.x + flag.w &&
-                player.x + player.w > flag.x &&
-                player.y < flag.y + flag.h &&
-                player.y + player.h > flag.y
-            ) {
-                resetJoystick();
-                alert("🎉 Gazab bhai! Level " + currentLevel + " clear kar liya! Next level aa raha hai!");
-                currentLevel++;
-                loadLevel(currentLevel);
+                // Collision check (Troll mechanism)
+                if (player.x < obstacles[0].x + obstacles[0].w && player.x + player.w > obstacles[0].x &&
+                    player.y < obstacles[0].y + obstacles[0].h && player.y + player.h > obstacles[0].y) {
+                    deaths++;
+                    document.getElementById('deaths').innerText = deaths;
+                    player.x = 50;
+                    if(deaths >= 10) {
+                        triggerRewardedAd();
+                        deaths = 0;
+                    }
+                }
             }
+
+            function draw() {
+                ctx.fillStyle = '#111827';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Ground
+                ctx.fillStyle = '#374151';
+                ctx.fillRect(0, canvas.height - 120, canvas.width, 120);
+
+                // Player
+                ctx.fillStyle = player.color;
+                ctx.fillRect(player.x, player.y, player.w, player.h);
+
+                // Obstacle (Troll block)
+                ctx.fillStyle = '#f43f5e';
+                ctx.fillRect(obstacles[0].x, obstacles[0].y, obstacles[0].w, obstacles[0].h);
+            }
+
+            function loop() {
+                update();
+                draw();
+                requestAnimationFrame(loop);
+            }
+            loop();
         }
-
-        function draw() {
-            ctx.fillStyle = "#090d16";
-            ctx.fillRect(0, 0, GAME_W, GAME_H);
-
-            platforms.forEach(p => {
-                ctx.fillStyle = "#334155";
-                ctx.fillRect(p.x, p.y, p.w, p.h);
-                ctx.fillStyle = "#38bdf8";
-                ctx.fillRect(p.x, p.y, p.w, 3);
-            });
-
-            ctx.fillStyle = "#ef4444";
-            spikes.forEach(s => {
-                ctx.beginPath();
-                ctx.moveTo(s.x, s.y + s.h);
-                ctx.lineTo(s.x + s.w / 2, s.y);
-                ctx.lineTo(s.x + s.w, s.y + s.h);
-                ctx.fill();
-            });
-
-            ctx.fillStyle = "#94a3b8";
-            ctx.fillRect(flag.x, flag.y, 4, flag.h);
-            ctx.fillStyle = "#22c55e";
-            ctx.fillRect(flag.x + 4, flag.y, 20, 16);
-
-            ctx.fillStyle = "#38bdf8";
-            ctx.fillRect(player.x, player.y, player.w, player.h);
-            ctx.fillStyle = "#090d16";
-            ctx.fillRect(player.x + 14, player.y + 6, 4, 4);
-        }
-
-        function loop() {
-            update();
-            draw();
-            requestAnimationFrame(loop);
-        }
-
-        // Initialize first level data (will be played after login)
-        loadLevel(currentLevel);
-        loop();
     </script>
 </body>
 </html>
+
