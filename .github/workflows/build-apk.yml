@@ -22,6 +22,7 @@ jobs:
 
     - name: Add Android platform and sync
       run: |
+        npx cap init "I Will Troll You Every Time" com.ojas.trollyou --web-dir www --yes
         npx cap add android
         npx cap sync
 
