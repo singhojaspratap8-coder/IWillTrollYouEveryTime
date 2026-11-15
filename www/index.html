@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>I Will Troll You Every Time</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #0b0f19;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+        #intro-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0f172a, #1e1b4b);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            transition: opacity 1s ease;
+        }
+        .intro-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #38bdf8;
+            text-align: center;
+            margin-bottom: 10px;
+            text-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
+            animation: pulse 1.5s infinite;
+        }
+        .intro-credit {
+            font-size: 18px;
+            color: #f43f5e;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        .intro-insta {
+            font-size: 15px;
+            color: #a78bfa;
+            text-decoration: none;
+            border: 1px dashed #a78bfa;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: rgba(167, 139, 250, 0.1);
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        #game-container {
+            display: none;
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        canvas {
+            display: block;
+            background: #111827;
+        }
+        #ui-layer {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 18px;
+            font-weight: bold;
+            pointer-events: none;
+        }
+        #ad-banner-sim {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background: #1f2937;
+            border-top: 2px solid #374151;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 13px;
+            color: #9ca3af;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 5 Second Splash Screen / Intro -->
+    <div id="intro-screen">
+        <div class="intro-title">I Will Troll You Every Time</div>
+        <div class="intro-credit">Created by Ojas Pratap Singh</div>
+        <a href="https://www.instagram.com/" class="intro-insta" target="_blank">Instagram: @DesignByKratos</a>
+    </div>
+
+    <!-- Main Game UI -->
+    <div id="game-container">
+        <div id="ui-layer">
+            <div>Score: <span id="score">0</span></div>
+            <div>Deaths: <span id="deaths">0</span>/10</div>
+        </div>
+        <canvas id="gameCanvas"></canvas>
+        <div id="ad-banner-sim">Unity Ads Banner [ID: 800439402] Active</div>
+    </div>
+
+    <script>
+        // Unity Ads Integration Stub for Wrapper / Android APK
+        const UNITY_GAME_ID = "800439402";
+        console.log("Unity Ads Initialized with Game ID: " + UNITY_GAME_ID);
+
+        function triggerRewardedAd() {
+            alert("Unity Ads Rewarded Video Loaded! (Watch ad to get revival bonus)");
+        }
+
+        // Hide Intro after 5 seconds and start game
+        setTimeout(() => {
+            document.getElementById('intro-screen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('intro-screen').style.display = 'none';
+                document.getElementById('game-container').style.display = 'block';
+                initGame();
+            }, 1000);
+        }, 5000);
+
+        // Basic Canvas Game Loop Placeholder
+        function initGame() {
+            const canvas = document.getElementById('gameCanvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight - 50; // Leave space for banner
+
+            let player = { x: 50, y: canvas.height - 150, w: 30, h: 30, color: '#38bdf8', vy: 0, gravity: 0.6, jump: -12, grounded: false };
+            let obstacles = [{ x: canvas.width, y: canvas.height - 150, w: 25, h: 40, speed: 5 }];
+            let score = 0;
+            let deaths = 0;
+
+            window.addEventListener('touchstart', () => {
+                if (player.grounded) {
+                    player.vy = player.jump;
+                    player.grounded = false;
+                }
+            });
+
+            function update() {
+                player.vy += player.gravity;
+                player.y += player.vy;
+
+                if (player.y > canvas.height - 150) {
+                    player.y = canvas.height - 150;
+                    player.vy = 0;
+                    player.grounded = true;
+                }
+
+                obstacles[0].x -= obstacles[0].speed;
+                if (obstacles[0].x < -30) {
+                    obstacles[0].x = canvas.width + Math.random() * 200;
+                    score += 10;
+                    document.getElementById('score').innerText = score;
+                }
+
+                // Collision check (Troll mechanism)
+                if (player.x < obstacles[0].x + obstacles[0].w && player.x + player.w > obstacles[0].x &&
+                    player.y < obstacles[0].y + obstacles[0].h && player.y + player.h > obstacles[0].y) {
+                    deaths++;
+                    document.getElementById('deaths').innerText = deaths;
+                    player.x = 50;
+                    if(deaths >= 10) {
+                        triggerRewardedAd();
+                        deaths = 0;
+                    }
+                }
+            }
+
+            function draw() {
+                ctx.fillStyle = '#111827';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Ground
+                ctx.fillStyle = '#374151';
+                ctx.fillRect(0, canvas.height - 120, canvas.width, 120);
+
+                // Player
+                ctx.fillStyle = player.color;
+                ctx.fillRect(player.x, player.y, player.w, player.h);
+
+                // Obstacle (Troll block)
+                ctx.fillStyle = '#f43f5e';
+                ctx.fillRect(obstacles[0].x, obstacles[0].y, obstacles[0].w, obstacles[0].h);
+            }
+
+            function loop() {
+                update();
+                draw();
+                requestAnimationFrame(loop);
+            }
+            loop();
+        }
+    </script>
+</body>
+</html>
+

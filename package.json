@@ -1,0 +1,26 @@
+{
+  "name": "iwilltrollyoueverytime",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/singhojaspratap8-coder/IWillTrollYouEveryTime.git"
+  },
+  "keywords": [],
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/singhojaspratap8-coder/IWillTrollYouEveryTime/issues"
+  },
+  "homepage": "https://github.com/singhojaspratap8-coder/IWillTrollYouEveryTime#readme",
+  "dependencies": {
+    "@capacitor/android": "^8.6.2",
+    "@capacitor/core": "^8.6.2"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.6.2"
+  }
+}
